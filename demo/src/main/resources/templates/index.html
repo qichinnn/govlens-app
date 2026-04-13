@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GovLens AI System</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f6f9;
+            margin: 0;
+        }
+
+        .container {
+            width: 60%;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+
+        img {
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        /* Loading Box */
+        #loadingBox {
+            display: none;
+        }
+
+        .loader {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #progressBar {
+            width: 100%;
+            background: #eee;
+            margin-top: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress {
+            width: 0%;
+            height: 10px;
+            background: #27ae60;
+        }
+
+        .log {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        function previewImage(event, id) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById(id).src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function startAI() {
+
+            document.getElementById("loadingBox").style.display = "block";
+
+            let logs = [
+                "🔗 Connecting to Gemini API...",
+                "📡 Sending image for analysis...",
+                "🤖 Gemini extracting data...",
+                "🧠 Confidence calculating...",
+                "🚨 Fraud score detected...",
+                "📊 Cross-validating documents...",
+                "⚡ Generating AI decision..."
+            ];
+
+            let i = 0;
+            let progress = 0;
+
+            let logBox = document.getElementById("logs");
+
+            let interval = setInterval(() => {
+
+                if (i < logs.length) {
+                    let newLog = document.createElement("div");
+                    newLog.className = "log";
+                    newLog.innerText = logs[i];
+                    logBox.appendChild(newLog);
+                    i++;
+                }
+
+                progress += 14;
+                document.getElementById("progress").style.width = progress + "%";
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+
+            }, 600);
+
+            setTimeout(() => {
+                document.getElementById("form").submit();
+            }, 4200);
+
+            return false;
+        }
+    </script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌊 GovLens Flood Relief Application</h1>
+
+    <!-- Upload Card -->
+    <div class="card">
+
+        <form id="form" action="/analyze" method="post" enctype="multipart/form-data" onsubmit="return startAI()">
+
+            <p><strong>Upload MyKad:</strong></p>
+            <input type="file" name="mykad" required onchange="previewImage(event, 'preview1')"><br>
+            <img id="preview1" width="120"><br><br>
+
+            <p><strong>Upload Supporting Document:</strong></p>
+            <input type="file" name="document" required onchange="previewImage(event, 'preview2')"><br>
+            <img id="preview2" width="120"><br><br>
+
+            <button type="submit">🚀 Submit Application</button>
+
+        </form>
+
+    </div>
+
+    <!-- AI Loading Card -->
+    <div class="card center" id="loadingBox">
+
+        <strong>🧠 GovLens AI Processing...</strong>
+
+        <div id="progressBar">
+            <div id="progress"></div>
+        </div>
+
+        <div class="loader"></div>
+
+        <div id="logs"></div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

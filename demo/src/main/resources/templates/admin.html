@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GovLens Admin</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 40px auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .review {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .logout {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .logout:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📊 GovLens Admin Dashboard</h1>
+    <p>Welcome, Admin 👋</p>
+
+    <div class="card">
+        <h2>📋 Applications</h2>
+
+        <ul>
+            <li th:each="r : ${results}"
+                th:text="${r}"
+                th:classappend="
+                    ${r == 'Approved'} ? 'approved' :
+                    (${r == 'Review Needed'} ? 'review' : 'rejected')
+                ">
+            </li>
+        </ul>
+    </div>
+
+    <a href="/logout" class="logout">Logout</a>
+
+</div>
+
+</body>
+</html>

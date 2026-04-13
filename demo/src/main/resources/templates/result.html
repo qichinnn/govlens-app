@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GovLens Result</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f6f9;
+            margin: 0;
+        }
+
+        .container {
+            width: 60%;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .approved {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .review {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .rejected {
+            color: red;
+            font-weight: bold;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        pre {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+        <h1>🤖 GovLens AI Decision Engine</h1>
+
+        <p>
+            📊 Confidence Score:
+            <strong th:text="${confidence}"></strong>
+        </p>
+
+        <p>
+            ⚠️ Risk Level:
+            <strong th:text="${risk}"></strong>
+        </p>
+
+        <h2 th:text="${decision}"
+            th:classappend="
+                ${decision == 'Approved'} ? 'approved' :
+                (${decision == 'Review Needed'} ? 'review' : 'rejected')
+            ">
+        </h2>
+    </div>
+
+    <div class="card">
+        <h3>🧠 AI Explanation</h3>
+
+        <ul>
+            <li>✔ Name matched (98%)</li>
+            <li>✔ Address matched (95%)</li>
+            <li>⚠ Document clarity varies</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>📦 Structured Output (JSON)</h3>
+
+        <pre>
+{
+  "confidence": "<span th:text='${confidence}'></span>",
+  "decision": "<span th:text='${decision}'></span>",
+  "risk": "<span th:text='${risk}'></span>"
+}
+        </pre>
+    </div>
+
+    <a href="/" class="btn">⬅ Back to Home</a>
+
+</div>
+
+</body>
+</html>
