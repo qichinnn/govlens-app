@@ -4,71 +4,113 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
+
 import java.util.Random;
 
 @Controller
 public class HomeController {
 
-    // 首页
+    // 🔥 入口（选择身份）
     @GetMapping("/")
-    public String home() {
+    public String landing() {
+        return "login"; // 👉 login.html（选择 Citizen / Admin）
+    }
+
+    // ================================
+    // 👤 Citizen Login
+    // ================================
+
+    // 👤 Citizen 登录页面
+    @GetMapping("/user-login")
+    public String userLoginPage() {
+        return "user_login"; // 👉 user_login.html
+    }
+
+    // 👤 Citizen 登录逻辑（随便输入都可以进）
+    @PostMapping("/user-login")
+    public String userLogin(String username, String password,
+                            jakarta.servlet.http.HttpSession session) {
+
+        // ✅ 不管输入什么都通过（demo用）
+        session.setAttribute("userRole", "citizen");
+
+        return "redirect:/home";
+    }
+
+    // 👤 Citizen 页面（上传）
+    @GetMapping("/home")
+    public String home(jakarta.servlet.http.HttpSession session) {
+
+        Object role = session.getAttribute("userRole");
+
+        // ❌ 没登录不能进
+        if (role == null) {
+            return "redirect:/";
+        }
+
         return "index";
     }
 
-    // 登录页面
+    // ================================
+    // 🔐 Admin Login
+    // ================================
+
+    // 🔐 Admin 登录页面
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "login_admin"; // 👉 login_admin.html
     }
 
-    // 登录逻辑
+    // 🔐 Admin 登录逻辑
     @PostMapping("/login")
-public String login(String username, String password,
-                    jakarta.servlet.http.HttpSession session,
-                    Model model) {
+    public String login(String username, String password,
+                        jakarta.servlet.http.HttpSession session,
+                        Model model) {
 
-    if (username.equals("admin") && password.equals("1234")) {
-        session.setAttribute("user", "admin");
-        return "redirect:/admin";
+        if ("admin".equals(username) && "1234".equals(password)) {
+            session.setAttribute("user", "admin");
+            return "redirect:/admin";
+        }
+
+        model.addAttribute("error", "Invalid username or password");
+        return "login_admin";
     }
 
-    // ❌ 登录失败 → 传 error 给页面
-    model.addAttribute("error", "❌ Invalid username or password");
-
-    return "login";
-}
-
-    // 🔒 Admin（保护）
+    // 🔒 Admin Dashboard
     @GetMapping("/admin")
-public String admin(jakarta.servlet.http.HttpSession session, Model model) {
+    public String admin(jakarta.servlet.http.HttpSession session, Model model) {
 
-    Object user = session.getAttribute("user");
+        Object user = session.getAttribute("user");
 
-    if (user == null) {
-        return "redirect:/login";
+        // ❌ 没登录不能进
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        java.util.List<String> results = java.util.Arrays.asList(
+                "Approved",
+                "Rejected",
+                "Review Needed",
+                "Approved"
+        );
+
+        model.addAttribute("results", results);
+
+        return "admin";
     }
 
-    // 🔥 假数据（给 admin.html 用）
-    java.util.List<String> results = java.util.Arrays.asList(
-        "Approved",
-        "Rejected",
-        "Review Needed",
-        "Approved"
-    );
-
-    model.addAttribute("results", results);
-
-    return "admin";
-}
-
-    // 🔥 Logout（加分）
+    // ================================
+    // 🔥 Logout（两个角色都用）
+    // ================================
     @GetMapping("/logout")
     public String logout(jakarta.servlet.http.HttpSession session) {
         session.invalidate();
-        return "redirect:/login";
+        return "redirect:/";
     }
 
-    // AI analyze
+    // ================================
+    // 🤖 AI 分析
+    // ================================
     @PostMapping("/analyze")
     public String analyze(Model model) {
 

@@ -5,66 +5,75 @@
 
     <style>
         body {
-            font-family: Arial;
-            background-color: #f4f6f9;
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
             margin: 0;
+            color: #e5e7eb;
         }
 
         .container {
-            width: 60%;
+            width: 90%;
+            max-width: 600px;
             margin: 40px auto;
         }
 
         h1 {
             text-align: center;
-            color: #2c3e50;
+            margin-bottom: 30px;
         }
 
         .card {
-            background: white;
+            background: #111827;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #9ca3af;
         }
 
         input[type="file"] {
             margin-top: 10px;
+            color: white;
         }
 
         img {
             margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         button {
-            margin-top: 15px;
-            padding: 10px 15px;
-            background: #3498db;
-            color: white;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background: #3b82f6;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
             cursor: pointer;
         }
 
         button:hover {
-            background: #2980b9;
+            background: #2563eb;
         }
 
-        /* Loading Box */
+        /* Loading */
         #loadingBox {
             display: none;
         }
 
         .loader {
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #3498db;
+            border: 5px solid #1f2937;
+            border-top: 5px solid #3b82f6;
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
-            margin: 10px auto;
+            margin: 15px auto;
         }
 
         @keyframes spin {
@@ -74,25 +83,36 @@
 
         #progressBar {
             width: 100%;
-            background: #eee;
-            margin-top: 10px;
-            border-radius: 5px;
+            background: #1f2937;
+            border-radius: 6px;
             overflow: hidden;
         }
 
         #progress {
             width: 0%;
-            height: 10px;
-            background: #27ae60;
+            height: 8px;
+            background: #22c55e;
         }
 
         .log {
-            font-size: 14px;
-            margin-top: 5px;
+            font-size: 13px;
+            margin-top: 6px;
+            color: #9ca3af;
         }
 
         .center {
             text-align: center;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .logout {
+            color: #ef4444;
+            text-decoration: none;
         }
     </style>
 
@@ -106,26 +126,23 @@
         }
 
         function startAI() {
-
             document.getElementById("loadingBox").style.display = "block";
 
             let logs = [
-                "🔗 Connecting to Gemini API...",
-                "📡 Sending image for analysis...",
-                "🤖 Gemini extracting data...",
-                "🧠 Confidence calculating...",
-                "🚨 Fraud score detected...",
-                "📊 Cross-validating documents...",
-                "⚡ Generating AI decision..."
+                "Connecting to AI...",
+                "Uploading documents...",
+                "Extracting data...",
+                "Calculating confidence...",
+                "Detecting fraud risk...",
+                "Cross-checking...",
+                "Finalizing decision..."
             ];
 
             let i = 0;
             let progress = 0;
-
             let logBox = document.getElementById("logs");
 
             let interval = setInterval(() => {
-
                 if (i < logs.length) {
                     let newLog = document.createElement("div");
                     newLog.className = "log";
@@ -157,31 +174,32 @@
 
 <div class="container">
 
-    <h1>🌊 GovLens Flood Relief Application</h1>
+    <div class="topbar">
+        <h1>🌊 GovLens</h1>
+        <a href="/" class="logout">Switch Role</a>
+    </div>
 
-    <!-- Upload Card -->
     <div class="card">
 
         <form id="form" action="/analyze" method="post" enctype="multipart/form-data" onsubmit="return startAI()">
 
-            <p><strong>Upload MyKad:</strong></p>
+            <label>Upload MyKad</label><br>
             <input type="file" name="mykad" required onchange="previewImage(event, 'preview1')"><br>
             <img id="preview1" width="120"><br><br>
 
-            <p><strong>Upload Supporting Document:</strong></p>
+            <label>Upload Supporting Document</label><br>
             <input type="file" name="document" required onchange="previewImage(event, 'preview2')"><br>
-            <img id="preview2" width="120"><br><br>
+            <img id="preview2" width="120">
 
-            <button type="submit">🚀 Submit Application</button>
+            <button type="submit">Submit Application</button>
 
         </form>
 
     </div>
 
-    <!-- AI Loading Card -->
     <div class="card center" id="loadingBox">
 
-        <strong>🧠 GovLens AI Processing...</strong>
+        <strong>GovLens AI Processing...</strong>
 
         <div id="progressBar">
             <div id="progress"></div>
