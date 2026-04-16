@@ -37,6 +37,10 @@ Features
 ---
 
 Architecture diagram
+
+
+
+
 <img width="800" height="2000" alt="Professional Architecture Diagram for GovLens (1)" src="https://github.com/user-attachments/assets/ccc0b6bf-f19b-498f-9651-88f5ecd59b85" />
 
 The system consists of a frontend interface, backend processing layer, and AI decision logic.
