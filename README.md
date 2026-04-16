@@ -20,11 +20,11 @@ This system uses AI to analyze documents and give decisions.
 ## 🚀 Live Demo
 https://govlens-app-4.onrender.com
 
-Admin:
-username: admin  
-password: 1234  
+### Admin Access
+- Username: admin  
+- Password: 1234  
 
-## 🛠️ Tech
+## 🛠️ Tech Stack
 - Java Spring Boot
 - HTML / CSS
 - Render
