@@ -3,6 +3,7 @@ package com.example.demo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
 import java.util.Random;
@@ -13,37 +14,32 @@ public class HomeController {
     // 🔥 入口（选择身份）
     @GetMapping("/")
     public String landing() {
-        return "login"; // 👉 login.html（选择 Citizen / Admin）
+        return "login";
     }
 
     // ================================
     // 👤 Citizen Login
     // ================================
 
-    // 👤 Citizen 登录页面
     @GetMapping("/user-login")
     public String userLoginPage() {
-        return "user_login"; // 👉 user_login.html
+        return "user_login";
     }
 
-    // 👤 Citizen 登录逻辑（随便输入都可以进）
     @PostMapping("/user-login")
     public String userLogin(String username, String password,
                             jakarta.servlet.http.HttpSession session) {
 
-        // ✅ 不管输入什么都通过（demo用）
         session.setAttribute("userRole", "citizen");
-
         return "redirect:/home";
     }
 
-    // 👤 Citizen 页面（上传）
+    // 👤 Citizen 页面
     @GetMapping("/home")
     public String home(jakarta.servlet.http.HttpSession session) {
 
         Object role = session.getAttribute("userRole");
 
-        // ❌ 没登录不能进
         if (role == null) {
             return "redirect:/";
         }
@@ -55,13 +51,11 @@ public class HomeController {
     // 🔐 Admin Login
     // ================================
 
-    // 🔐 Admin 登录页面
     @GetMapping("/login")
     public String loginPage() {
-        return "login_admin"; // 👉 login_admin.html
+        return "login_admin";
     }
 
-    // 🔐 Admin 登录逻辑
     @PostMapping("/login")
     public String login(String username, String password,
                         jakarta.servlet.http.HttpSession session,
@@ -76,31 +70,47 @@ public class HomeController {
         return "login_admin";
     }
 
-    // 🔒 Admin Dashboard
+    // 🔒 Admin Dashboard（🔥最终升级版）
     @GetMapping("/admin")
     public String admin(jakarta.servlet.http.HttpSession session, Model model) {
 
         Object user = session.getAttribute("user");
 
-        // ❌ 没登录不能进
         if (user == null) {
             return "redirect:/login";
         }
 
+        // 🔥 数据（模拟真实系统）
         java.util.List<String> results = java.util.Arrays.asList(
-                "Approved",
-                "Rejected",
-                "Review Needed",
-                "Approved"
+                "Ali - ✅ Approved - 16 Apr",
+                "John - ❌ Rejected - 15 Apr",
+                "Siti - ⚠ Review Needed - 16 Apr",
+                "Ahmad - ✅ Approved - 14 Apr"
         );
 
+        // 🔥 计算数量
+        int approvedCount = 0;
+        int rejectedCount = 0;
+
+        for (String r : results) {
+            if (r.contains("Approved")) {
+                approvedCount++;
+            } else if (r.contains("Rejected")) {
+                rejectedCount++;
+            }
+        }
+
+        // 🔥 传给前端
         model.addAttribute("results", results);
+        model.addAttribute("approved", approvedCount);
+        model.addAttribute("rejected", rejectedCount);
+        model.addAttribute("total", results.size());
 
         return "admin";
     }
 
     // ================================
-    // 🔥 Logout（两个角色都用）
+    // 🔥 Logout
     // ================================
     @GetMapping("/logout")
     public String logout(jakarta.servlet.http.HttpSession session) {
@@ -109,10 +119,14 @@ public class HomeController {
     }
 
     // ================================
-    // 🤖 AI 分析
+    // 🤖 AI 分析（最终版🔥）
     // ================================
     @PostMapping("/analyze")
-    public String analyze(Model model) {
+    public String analyze(
+            @RequestParam String name,
+            @RequestParam String address,
+            @RequestParam String phone,
+            Model model) {
 
         Random random = new Random();
 
@@ -131,6 +145,12 @@ public class HomeController {
             risk = "High";
         }
 
+        // ✅ 用户资料
+        model.addAttribute("name", name);
+        model.addAttribute("address", address);
+        model.addAttribute("phone", phone);
+
+        // ✅ AI结果
         model.addAttribute("confidence", confidence);
         model.addAttribute("decision", decision);
         model.addAttribute("risk", risk);

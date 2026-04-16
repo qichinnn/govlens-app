@@ -134,23 +134,21 @@
         <a href="/logout" class="logout">Logout</a>
     </div>
 
-    <!-- 🔥 Stats (加分点！) -->
+    <!-- 🔥 Stats（用Controller传的值） -->
     <div class="stats">
         <div class="stat-box">
             <div class="stat-title">Total Applications</div>
-            <div class="stat-value" th:text="${#lists.size(results)}">0</div>
+            <div class="stat-value" th:text="${total}">0</div>
         </div>
 
         <div class="stat-box">
             <div class="stat-title">Approved</div>
-            <div class="stat-value"
-                 th:text="${#lists.size(results.?[ #this == 'Approved' ])}">0</div>
+            <div class="stat-value" th:text="${approved}">0</div>
         </div>
 
         <div class="stat-box">
             <div class="stat-title">Rejected</div>
-            <div class="stat-value"
-                 th:text="${#lists.size(results.?[ #this == 'Rejected' ])}">0</div>
+            <div class="stat-value" th:text="${rejected}">0</div>
         </div>
     </div>
 
@@ -161,8 +159,8 @@
         <ul>
             <li th:each="r : ${results}"
                 th:classappend="
-                    ${r == 'Approved'} ? 'approved' :
-                    (${r == 'Review Needed'} ? 'review' : 'rejected')
+                    ${#strings.contains(r, 'Approved')} ? 'approved' :
+                    (${#strings.contains(r, 'Review Needed')} ? 'review' : 'rejected')
                 ">
 
                 <span th:text="${r}">Result</span>

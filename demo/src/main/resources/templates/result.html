@@ -114,7 +114,22 @@
         <a href="/" class="switch">Switch Role</a>
     </div>
 
-    <!-- AI Decision -->
+    <!-- 👤 Applicant Info -->
+    <div class="card">
+        <h3>👤 Applicant Information</h3>
+
+        <p class="label">Name</p>
+        <div class="value" th:text="${name}"></div>
+
+        <p class="label">Address</p>
+        <div class="value" th:text="${address}"></div>
+
+        <!-- 🔥 新增 phone -->
+        <p class="label">Phone Number</p>
+        <div class="value" th:text="${phone}"></div>
+    </div>
+
+    <!-- 🤖 AI Decision -->
     <div class="card">
 
         <p class="label">Confidence Score</p>
@@ -130,7 +145,6 @@
             ">
         </h2>
 
-        <!-- 🔥 加分：Recommendation -->
         <div class="highlight">
             💡 Recommendation:
             <span th:if="${decision == 'Approved'}">
@@ -146,7 +160,7 @@
 
     </div>
 
-    <!-- Explanation -->
+    <!-- 🧠 Explanation -->
     <div class="card">
         <h3>🧠 AI Explanation</h3>
 
@@ -156,14 +170,13 @@
             <li>⚠ Document clarity varies</li>
         </ul>
 
-        <!-- 🔥 加分：Concept -->
         <div class="highlight">
             ⚡ This AI system reduces bureaucratic friction by automating manual verification processes.
             High-risk cases are flagged for human review, improving efficiency and accuracy.
         </div>
     </div>
 
-    <!-- Time Comparison（超加分🔥） -->
+    <!-- ⏱ Comparison -->
     <div class="card">
         <h3>⏱ Processing Comparison</h3>
 
@@ -171,12 +184,15 @@
         <p>AI verification: <strong>< 10 seconds</strong></p>
     </div>
 
-    <!-- JSON -->
+    <!-- 📦 JSON Output -->
     <div class="card">
         <h3>📦 Structured Output</h3>
 
         <pre>
 {
+  "name": "<span th:text='${name}'></span>",
+  "address": "<span th:text='${address}'></span>",
+  "phone": "<span th:text='${phone}'></span>",
   "confidence": "<span th:text='${confidence}'></span>",
   "decision": "<span th:text='${decision}'></span>",
   "risk": "<span th:text='${risk}'></span>"

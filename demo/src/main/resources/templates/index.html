@@ -33,6 +33,16 @@
         label {
             font-size: 14px;
             color: #9ca3af;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: none;
         }
 
         input[type="file"] {
@@ -61,7 +71,6 @@
             background: #2563eb;
         }
 
-        /* Loading */
         #loadingBox {
             display: none;
         }
@@ -118,11 +127,25 @@
 
     <script>
         function previewImage(event, id) {
+            const file = event.target.files[0];
+
+            if (!file) return;
+
             const reader = new FileReader();
             reader.onload = function() {
                 document.getElementById(id).src = reader.result;
             };
-            reader.readAsDataURL(event.target.files[0]);
+            reader.readAsDataURL(file);
+        }
+
+        // 🔥 File size check (1MB)
+        function checkSize(event) {
+            const file = event.target.files[0];
+
+            if (file && file.size > 1024 * 1024) {
+                alert("File too large (max 1MB)");
+                event.target.value = "";
+            }
         }
 
         function startAI() {
@@ -135,7 +158,7 @@
                 "Calculating confidence...",
                 "Detecting fraud risk...",
                 "Cross-checking...",
-                "Finalizing decision..."
+                "Generating final decision..."
             ];
 
             let i = 0;
@@ -183,12 +206,25 @@
 
         <form id="form" action="/analyze" method="post" enctype="multipart/form-data" onsubmit="return startAI()">
 
-            <label>Upload MyKad</label><br>
-            <input type="file" name="mykad" required onchange="previewImage(event, 'preview1')"><br>
-            <img id="preview1" width="120"><br><br>
+            <!-- 👤 Personal Info -->
+            <label>Full Name</label>
+            <input type="text" name="name" required>
 
-            <label>Upload Supporting Document</label><br>
-            <input type="file" name="document" required onchange="previewImage(event, 'preview2')"><br>
+            <label>Address</label>
+            <input type="text" name="address" required>
+
+            <label>Phone Number</label>
+            <input type="text" name="phone" required>
+
+            <!-- 📄 Upload -->
+            <label>Upload MyKad</label>
+            <input type="file" name="mykad" required accept="image/*"
+                   onchange="previewImage(event, 'preview1'); checkSize(event)">
+            <img id="preview1" width="120"><br>
+
+            <label>Upload Supporting Document</label>
+            <input type="file" name="document" required accept="image/*"
+                   onchange="previewImage(event, 'preview2'); checkSize(event)">
             <img id="preview2" width="120">
 
             <button type="submit">Submit Application</button>
