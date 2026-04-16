@@ -1,4 +1,4 @@
-<img width="425" height="892" alt="image" src="https://github.com/user-attachments/assets/2e6ae49c-2fa4-49bd-9550-f24a65d1ea20" /># 🌊 GovLens
+🌊 GovLens
 
 AI-powered Flood Relief Verification System
 
