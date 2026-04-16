@@ -1,208 +1,211 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>GovLens Result</title>
+    <title>GovLens Result</title><style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #0f172a;
+        margin: 0;
+        color: #e5e7eb;
+    }
 
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #0f172a;
-            margin: 0;
-            color: #e5e7eb;
-        }
+    .container {
+        width: 90%;
+        max-width: 650px;
+        margin: 40px auto;
+    }
 
-        .container {
-            width: 90%;
-            max-width: 650px;
-            margin: 40px auto;
-        }
+    .card {
+        background: #111827;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        margin-bottom: 20px;
+    }
 
-        .card {
-            background: #111827;
-            padding: 25px;
-            border-radius: 14px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            margin-bottom: 20px;
-        }
+    h1 { margin-bottom: 15px; }
+    h2 { margin-top: 10px; }
 
-        h1 {
-            margin-bottom: 15px;
-        }
+    .approved { color: #22c55e; }
+    .review { color: #eab308; }
+    .rejected { color: #ef4444; }
 
-        h2 {
-            margin-top: 10px;
-        }
+    .label {
+        color: #9ca3af;
+        font-size: 14px;
+    }
 
-        .approved {
-            color: #22c55e;
-        }
+    .value {
+        font-size: 18px;
+        margin-top: 5px;
+    }
 
-        .review {
-            color: #eab308;
-        }
+    ul {
+        padding-left: 20px;
+    }
 
-        .rejected {
-            color: #ef4444;
-        }
+    li {
+        margin: 6px 0;
+    }
 
-        .label {
-            color: #9ca3af;
-            font-size: 14px;
-        }
+    pre {
+        background: #1f2937;
+        color: #d1d5db;
+        padding: 15px;
+        border-radius: 10px;
+        overflow-x: auto;
+    }
 
-        .value {
-            font-size: 18px;
-            margin-top: 5px;
-        }
+    .btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 18px;
+        background: #3b82f6;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+    }
 
-        ul {
-            padding-left: 20px;
-        }
+    .btn:hover {
+        background: #2563eb;
+    }
 
-        li {
-            margin: 6px 0;
-        }
+    .highlight {
+        background: #1f2937;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 15px;
+    }
 
-        pre {
-            background: #1f2937;
-            color: #d1d5db;
-            padding: 15px;
-            border-radius: 10px;
-            overflow-x: auto;
-        }
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
 
-        .btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 18px;
-            background: #3b82f6;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-        }
+    .switch {
+        color: #ef4444;
+        text-decoration: none;
+    }
 
-        .btn:hover {
-            background: #2563eb;
-        }
+    /* 🔥 Progress bar */
+    .bar {
+        height: 8px;
+        border-radius: 6px;
+        background: #1f2937;
+        overflow: hidden;
+        margin-top: 10px;
+    }
 
-        .highlight {
-            background: #1f2937;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
+    .bar-fill {
+        height: 100%;
+        background: #22c55e;
+    }
 
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
+    .center {
+        text-align: center;
+    }
+</style>
 
-        .switch {
-            color: #ef4444;
-            text-decoration: none;
-        }
-    </style>
-</head>
+</head><body><div class="container"><div class="topbar">
+    <h1>🤖 GovLens AI</h1>
+    <a href="/" class="switch">Switch Role</a>
+</div>
 
-<body>
+<!-- 🔥 BIG RESULT CARD -->
+<div class="card center">
+    <h2 th:text="${decision}"
+        th:classappend="
+            ${decision == 'Approved'} ? 'approved' :
+            (${decision == 'Review Needed'} ? 'review' : 'rejected')
+        ">
+    </h2>
 
-<div class="container">
+    <p style="font-size:18px;">
+        Confidence: <span th:text="${confidence} + '%'"></span>
+    </p>
 
-    <div class="topbar">
-        <h1>🤖 GovLens AI</h1>
-        <a href="/" class="switch">Switch Role</a>
-    </div>
-
-    <!-- 👤 Applicant Info -->
-    <div class="card">
-        <h3>👤 Applicant Information</h3>
-
-        <p class="label">Name</p>
-        <div class="value" th:text="${name}"></div>
-
-        <p class="label">Address</p>
-        <div class="value" th:text="${address}"></div>
-
-        <!-- 🔥 新增 phone -->
-        <p class="label">Phone Number</p>
-        <div class="value" th:text="${phone}"></div>
-    </div>
-
-    <!-- 🤖 AI Decision -->
-    <div class="card">
-
-        <p class="label">Confidence Score</p>
-        <div class="value" th:text="${confidence}"></div>
-
-        <p class="label">Risk Level</p>
-        <div class="value" th:text="${risk}"></div>
-
-        <h2 th:text="${decision}"
-            th:classappend="
-                ${decision == 'Approved'} ? 'approved' :
-                (${decision == 'Review Needed'} ? 'review' : 'rejected')
-            ">
-        </h2>
-
-        <div class="highlight">
-            💡 Recommendation:
-            <span th:if="${decision == 'Approved'}">
-                Approve automatically
-            </span>
-            <span th:if="${decision == 'Review Needed'}">
-                Requires manual review
-            </span>
-            <span th:if="${decision == 'Rejected'}">
-                Reject due to high risk
-            </span>
-        </div>
-
-    </div>
-
-    <!-- 🧠 Explanation -->
-    <div class="card">
-        <h3>🧠 AI Explanation</h3>
-
-        <ul>
-            <li>✔ Name matched (98%)</li>
-            <li>✔ Address matched (95%)</li>
-            <li>⚠ Document clarity varies</li>
-        </ul>
-
-        <div class="highlight">
-            ⚡ This AI system reduces bureaucratic friction by automating manual verification processes.
-            High-risk cases are flagged for human review, improving efficiency and accuracy.
+    <!-- 🔥 progress bar -->
+    <div class="bar">
+        <div class="bar-fill"
+             th:style="'width:' + ${confidence} + '%'">
         </div>
     </div>
+</div>
 
-    <!-- ⏱ Comparison -->
-    <div class="card">
-        <h3>⏱ Processing Comparison</h3>
+<!-- 👤 Applicant Info -->
+<div class="card">
+    <h3>👤 Applicant Information</h3>
 
-        <p>Manual verification: <strong>3–5 days</strong></p>
-        <p>AI verification: <strong>< 10 seconds</strong></p>
+    <p class="label">Name</p>
+    <div class="value" th:text="${name}"></div>
+
+    <p class="label">Address</p>
+    <div class="value" th:text="${address}"></div>
+
+    <p class="label">Phone Number</p>
+    <div class="value" th:text="${phone}"></div>
+</div>
+
+<!-- 🤖 AI Decision -->
+<div class="card">
+
+    <p class="label">Risk Level</p>
+    <div class="value" th:text="${risk}"></div>
+
+    <div class="highlight">
+        💡 Recommendation:
+        <span th:if="${decision == 'Approved'}">
+            Approve automatically
+        </span>
+        <span th:if="${decision == 'Review Needed'}">
+            Requires manual review
+        </span>
+        <span th:if="${decision == 'Rejected'}">
+            Reject due to high risk
+        </span>
     </div>
-
-    <!-- 📦 JSON Output -->
-    <div class="card">
-        <h3>📦 Structured Output</h3>
-
-        <pre>
-{
-  "name": "<span th:text='${name}'></span>",
-  "address": "<span th:text='${address}'></span>",
-  "phone": "<span th:text='${phone}'></span>",
-  "confidence": "<span th:text='${confidence}'></span>",
-  "decision": "<span th:text='${decision}'></span>",
-  "risk": "<span th:text='${risk}'></span>"
-}
-        </pre>
-    </div>
-
-    <a href="/home" class="btn">⬅ Back</a>
 
 </div>
 
-</body>
+<!-- 🧠 AI Explanation（🔥动态） -->
+<div class="card">
+    <h3>🧠 AI Explanation</h3>
+
+    <!-- 🔥 动态列表 -->
+    <ul>
+        <li th:each="e : ${explanations}" th:text="${e}"></li>
+    </ul>
+
+    <!-- 🔥 总结 -->
+    <div class="highlight" th:text="${finalExplanation}"></div>
+</div>
+
+<!-- ⏱ Comparison -->
+<div class="card">
+    <h3>⏱ Processing Comparison</h3>
+
+    <p>Manual verification: <strong>3–5 days</strong></p>
+    <p>AI verification: <strong>< 10 seconds</strong></p>
+</div>
+
+<!-- 📦 JSON Output -->
+<div class="card">
+    <h3>📦 Structured Output</h3>
+
+    <pre>
+
+{
+"name": "<span th:text='${name}'></span>",
+"address": "<span th:text='${address}'></span>",
+"phone": "<span th:text='${phone}'></span>",
+"confidence": "<span th:text='${confidence}'></span>",
+"decision": "<span th:text='${decision}'></span>",
+"risk": "<span th:text='${risk}'></span>"
+}
+</pre>
+</div>
+
+<a href="/home" class="btn">⬅ Back</a>
+
+</div></body>
 </html>

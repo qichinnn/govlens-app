@@ -1,17 +1,20 @@
 package com.example.demo;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
-import java.util.Random;
+import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 public class HomeController {
 
-    // 🔥 入口（选择身份）
+    // 🔥 存储真实数据
+    private static List<String> applicationList = new ArrayList<>();
+
+    // 🔥 入口
     @GetMapping("/")
     public String landing() {
         return "login";
@@ -34,7 +37,6 @@ public class HomeController {
         return "redirect:/home";
     }
 
-    // 👤 Citizen 页面
     @GetMapping("/home")
     public String home(jakarta.servlet.http.HttpSession session) {
 
@@ -70,7 +72,9 @@ public class HomeController {
         return "login_admin";
     }
 
-    // 🔒 Admin Dashboard（🔥最终升级版）
+    // ================================
+    // 🔒 Admin Dashboard
+    // ================================
     @GetMapping("/admin")
     public String admin(jakarta.servlet.http.HttpSession session, Model model) {
 
@@ -80,19 +84,10 @@ public class HomeController {
             return "redirect:/login";
         }
 
-        // 🔥 数据（模拟真实系统）
-        java.util.List<String> results = java.util.Arrays.asList(
-                "Ali - ✅ Approved - 16 Apr",
-                "John - ❌ Rejected - 15 Apr",
-                "Siti - ⚠ Review Needed - 16 Apr",
-                "Ahmad - ✅ Approved - 14 Apr"
-        );
-
-        // 🔥 计算数量
         int approvedCount = 0;
         int rejectedCount = 0;
 
-        for (String r : results) {
+        for (String r : applicationList) {
             if (r.contains("Approved")) {
                 approvedCount++;
             } else if (r.contains("Rejected")) {
@@ -100,11 +95,10 @@ public class HomeController {
             }
         }
 
-        // 🔥 传给前端
-        model.addAttribute("results", results);
+        model.addAttribute("results", applicationList);
         model.addAttribute("approved", approvedCount);
         model.addAttribute("rejected", rejectedCount);
-        model.addAttribute("total", results.size());
+        model.addAttribute("total", applicationList.size());
 
         return "admin";
     }
@@ -119,7 +113,7 @@ public class HomeController {
     }
 
     // ================================
-    // 🤖 AI 分析（最终版🔥）
+    // 🤖 AI 分析（🔥升级版：像AI判断）
     // ================================
     @PostMapping("/analyze")
     public String analyze(
@@ -128,32 +122,97 @@ public class HomeController {
             @RequestParam String phone,
             Model model) {
 
-        Random random = new Random();
+        int score = 0;
+        List<String> explanations = new ArrayList<>();
 
-        double confidence = random.nextDouble();
+        // 👤 Name判断
+        if (name.length() > 5) {
+            score += 30;
+            explanations.add("✔ Name format looks valid");
+        } else {
+            score += 10;
+            explanations.add("⚠ Name is too short");
+        }
+
+        // 📍 Address判断
+        if (address.length() > 10) {
+            score += 30;
+            explanations.add("✔ Address appears complete");
+        } else {
+            score += 10;
+            explanations.add("⚠ Address seems incomplete");
+        }
+
+        // 📱 Phone判断
+        if (phone.matches("\\d{10,11}")) {
+            score += 20;
+            explanations.add("✔ Phone number is valid");
+        } else {
+            score += 5;
+            explanations.add("⚠ Phone number format invalid");
+        }
+
+        // ⚠ 风险检测
+        if (name.toLowerCase().contains("test")) {
+            score -= 20;
+            explanations.add("❌ Suspicious name detected");
+        }
+
+        if (address.toLowerCase().contains("unknown")) {
+            score -= 20;
+            explanations.add("❌ Suspicious address detected");
+        }
+
+        // 🔥 转confidence
+        double confidence = Math.max(0, Math.min(1, score / 100.0));
+        int percentage = (int)(confidence * 100);
+
         String decision;
         String risk;
+        String icon;
 
-        if (confidence > 0.85) {
+        if (confidence > 0.75) {
             decision = "Approved";
             risk = "Low";
-        } else if (confidence > 0.75) {
+            icon = "✅";
+        } else if (confidence > 0.5) {
             decision = "Review Needed";
             risk = "Medium";
+            icon = "⚠";
         } else {
             decision = "Rejected";
             risk = "High";
+            icon = "❌";
         }
 
-        // ✅ 用户资料
+        // 📅 时间
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMM"));
+
+        // 📦 记录
+        String record = name + " - " + icon + " " + decision + " - " + date;
+        applicationList.add(0, record);
+
+        // 🔥 动态 explanation
+        String finalExplanation;
+
+        if (decision.equals("Approved")) {
+            finalExplanation = "High confidence: data is consistent and verified.";
+        } else if (decision.equals("Review Needed")) {
+            finalExplanation = "Moderate confidence: manual review recommended.";
+        } else {
+            finalExplanation = "Low confidence: high risk detected.";
+        }
+
+        // 数据传输
         model.addAttribute("name", name);
         model.addAttribute("address", address);
         model.addAttribute("phone", phone);
 
-        // ✅ AI结果
-        model.addAttribute("confidence", confidence);
+        model.addAttribute("confidence", percentage);
         model.addAttribute("decision", decision);
         model.addAttribute("risk", risk);
+        model.addAttribute("explanations", explanations);
+        model.addAttribute("finalExplanation", finalExplanation);
 
         return "result";
     }
