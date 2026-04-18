@@ -55,11 +55,13 @@ This architecture ensures real-time processing and centralized monitoring.
 
 
 Live Demo
-👉 https://govlens-app-4.onrender.com
+👉 https://govlens-905322305690.asia-southeast1.run.app
 
-Admin Access
+Admin Access(DEMO PURPOSE ONLY)
 - Username: admin  
-- Password: 1234  
+- Password: 1234
+
+  Note:This a demo account for testing purpose only.
 
 ---
 
@@ -78,7 +80,8 @@ Tech Stack
 - Java Spring Boot  
 - HTML / CSS  
 - Thymeleaf  
-- Render (Deployment)  
+- Docker
+- Google Cloud Run
 
 ---
 
