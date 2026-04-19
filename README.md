@@ -56,6 +56,7 @@ This architecture ensures real-time processing and centralized monitoring.
 
 Live Demo
 👉 https://govlens-905322305690.asia-southeast1.run.app
+👉 https://youtu.be/kqze9AdgyzY?si=jtke_eNyy7uC9Ssm
 
 Admin Access(DEMO PURPOSE ONLY)
 - Username: admin  
@@ -110,6 +111,16 @@ show real time tracking of all submitted application with status and timestamps
 - Gemini (for code assistance and UI design ideas)
 
 ---
+
+AI Usage
+The system uses rule-based AI logic to simulate decision-making in flood relief verification.
+
+It analyzes submitted data and generates:
+- Confidence scores
+- Risk levels
+- Final approval decisions
+
+The system is designed to be scalable, allowing integration with real machine learning models in the future.
 
 Impact
 - Faster processing (from days → seconds)  
